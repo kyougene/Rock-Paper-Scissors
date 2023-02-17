@@ -9,8 +9,20 @@
 </head>
 <body>
     <div class="container">
-        <h1>Rock Paper Scissors</h1>
-        <button onclick="game()">Start Game</button>
+        <h1 id="headers">Best Of 5 Wins!</h1>
+        <div class="choice-container">
+            <button class = 'choices' id="rock">Rock</button>
+            <button class = 'choices' id="paper">Paper</button>
+            <button class = 'choices' id="scissor">Scissors</button>
+         </div>
+         <button id="reset">Reset</button>
+         <div id="round-result"></div>
+         <div class="result-container">
+            <div id="playerWins"></div>
+            <div id="computerWins"></div>
+            <div id="ties"></div>
+         </div>
+         <div id="overall-result"></div>
     </div>
     <script src="main.js"></script>
 </body>

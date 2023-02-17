@@ -1,88 +1,107 @@
+const rockButton = document.getElementById('rock');
+const paperButton = document.getElementById('paper');
+const scissorsButton = document.getElementById('scissor');
+const resetButton = document.getElementById('reset');
+const roundResult = document.getElementById('round-result');
+const playerWinsDiv = document.getElementById('playerWins');
+const computerWinsDiv = document.getElementById('computerWins');
+const tiesDiv = document.getElementById('ties');
+const overallResult = document.getElementById('overall-result');
 const choices = ['rock', 'paper', 'scissors']
-const winners = []
+const header = document.getElementById('headers');
+let playerWins = 0;
+let computerWins = 0;
+let ties = 0;
+let round = 0;
 
-function game() {
-    for(let i = 0; i <5; i++){
-        playRound(i + 1);
-    }
-    logWins();
-}
-
-function playRound(round){
-    const playerSelection = playerChoice();
+//starting a round, and updating the results of that round
+function playRound(selection){
+    
+    round++;
+    const playerSelection = selection;
     const computerSelection = computerChoice();
-    const winner = checkWinner(playerSelection, computerSelection);
-    winners.push(winner);
-    logRound(playerSelection, computerSelection, winner, round)
-}
-
-function playerChoice() {
-//get input from player
-let input = prompt('Choose Rock, Paper, or Scissors');
-while (input == null){
-    input = prompt('Please enter a valid response')
-}
-input = input.toLowerCase();
-let check = validateInput(input);
-
-while (check == false) {
-    input = prompt('Please enter a valid response')
-    while (input == null) {
-        input = prompt('Please enter a valid response')
+    if (round < 5){
+        updateResults(checkWinner(playerSelection, computerSelection));
     }
-    input = input.toLowerCase();
-    check = validateInput(input);
+    else {
+        if (playerWins > computerWins){
+            header.innerText = 'Player Wins!';
+        }
+        else if (computerWins > playerWins){
+            header.innerText = 'Computer Wins!';
+        }
+        else if (playerWins = computerWins){
+            header.innerText = 'It\'s A Tie!';
+        }
+        roundResult.innerHTML = '<h2>Reset The Game To Play Again!</h2>';
+    }
 }
-return input;
-}
-
+// grabbing computer choice
 function computerChoice() {
     return choices[Math.floor(Math.random() * choices.length)]
-    console.log(computerChoice)
 }
 
-function validateInput(choice){
- return choices.includes(choice)
-}
-
+// checking round winner 
 function checkWinner(choiceP, choiceC){
     if (choiceP === choiceC){
-        return 'Tie'
+        ties++;
+        return 'Tie';
     } else if (
         (choiceP === 'rock' && choiceC == 'scissors') || 
         (choiceP === 'paper' && choiceC == 'rock') ||
         (choiceP == 'scissor' && choiceC == 'paper')){
-        return 'Player'
+        playerWins++;
+        return 'Player';
     }
     else {
-        return 'Computer'
+        computerWins++;
+        return 'Computer';
+    }
+}
+
+// displaying the round result and overall score
+updateResults = (winner) => {
+    
+    if (winner == 'Player' || winner == 'Computer'){
+        roundResult.innerHTML = `<h2>${winner} Wins!</h2>`;
+    }
+    else {
+        roundResult.innerHTML = '<h2>It\'s A Tie!</h2>';
     }
 
-}
-
-function logWins(){
-    let playerWins = winners.filter((item) => item == 'Player').length;
-    let computerWins = winners.filter((item) => item == 'Computer').length;
-    let ties = winners.filter((item) => item == 'Tie').length;
-    console.log('Results: ')
-    console.log('Player Wins: ', playerWins)
-    console.log('Computer Wins: ', computerWins)
-    console.log('Ties: ', ties)
-}
-
-function logRound(playerChoice, computerChoice, winner, round){
-    console.log('Round: ', round)
-    console.log('Player Chose: ', playerChoice)
-    console.log('Computer Chose: ', computerChoice)
-    console.log(winner, 'Won the Round')
-    console.log('--------------------------------')
+    playerWinsDiv.innerHTML = `<p>Player Wins: ${playerWins}</p>`
+    computerWinsDiv.innerHTML = `<p>CPU Wins: ${computerWins}</p>`
+    tiesDiv.innerHTML = `<p>Ties: ${ties}</p>`
 }
 
 
-//recieve input from user 
-//check if input is valid
-//generate random answer from computer
-//compare user answer and computer answer
-//return winner 
-//loop over 5 times
-//return overall winner 
+
+// Attaching event listeners for the player choice, and starting the round 
+rockButton.addEventListener('click', () => {
+    let playerSelection = 'rock';
+    playRound(playerSelection);
+})
+
+paperButton.addEventListener('click', () => {
+    let playerSelection = 'paper';
+    playRound(playerSelection);
+})
+
+scissorsButton.addEventListener('click', () => {
+    let playerSelection = 'scissors';
+    playRound(playerSelection);
+})
+
+resetButton.addEventListener('click', () => {
+    playerWins = 0;
+    computerWins = 0;
+    ties = 0;
+    round =0;
+    
+    playerWinsDiv.innerHTML = '';
+    computerWinsDiv.innerHTML = '';
+    tiesDiv.innerHTML= '';
+    roundResult.innerHTML = '';
+    header.innerText = 'Best of 5 Wins!';
+})
+    
